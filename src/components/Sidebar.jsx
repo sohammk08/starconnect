@@ -1,14 +1,13 @@
-import React from "react";
 import Search from "./Search";
-import { MdArchive, MdLabelOutline } from "react-icons/md";
 import { CgSortAz } from "react-icons/cg";
+import { MdArchive, MdLabelOutline } from "react-icons/md";
 
 function Sidebar({ onAddContact }) {
   const isArchivePage = false;
 
   return (
     <div className="w-68 bg-gray-100 border border-gray-300 rounded-tl-lg rounded-bl-lg">
-      <h1 className="text-xl font-bold text-gray-800 mt-4 ml-4 cursor-pointer">
+      <h1 className="text-xl font-semibold text-gray-800 mt-4 ml-4 cursor-pointer">
         Star Connect
       </h1>
       <div className="border border-gray-300 my-2" />

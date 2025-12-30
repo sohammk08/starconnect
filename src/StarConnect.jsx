@@ -8,7 +8,7 @@ function StarConnect() {
 
   return (
     <div>
-      <div className="flex justify-center min-h-screen py-5 bg-gray-100">
+      <div className="flex justify-end pr-5 min-h-screen py-5 bg-gray-100">
         <Sidebar onAddContact={onAddContact} />
         <ExpandedContactView />
       </div>

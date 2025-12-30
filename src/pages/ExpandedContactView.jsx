@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 function ExpandedContactView() {
   return (
     <div className=" border border-gray-200 dark:border-none dark:bg-[#121212]">
-      <div className="flex justify-center items-center min-h-[calc(100vh-5rem)]">
+      <div className="flex justify-center items-center min-h-[calc(100vh-5rem)] w-6xl">
         <div className="text-center">
           <h1 className="text-4xl font-semibold text-gray-800 dark:text-gray-100 mb-8">
             Connections, secured

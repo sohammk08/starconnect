@@ -5,6 +5,7 @@ import Register from "./pages/Register";
 import ErrorPage from "./pages/ErrorPage";
 import Documentation from "./pages/Documentation";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Nav from "./components/Nav";
 
 function App() {
   const userState = true;
@@ -12,7 +13,8 @@ function App() {
   return (
     <div className="flex h-screen w-screen">
       <Router>
-        <div className="flex h-screen w-screen">
+        <div className="flex h-screen w-screen bg-gray-100 dark:bg-black">
+          <Nav />
           <div className="grow items-center">
             <Routes>
               <Route exact path="/" element={<StarConnect />} />
