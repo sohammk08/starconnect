@@ -1,23 +1,28 @@
 import Login from "./pages/Login";
+import Nav from "./components/Nav";
+import Landing from "./pages/Landing";
 import StarConnect from "./StarConnect";
 import Settings from "./pages/Settings";
 import Register from "./pages/Register";
 import ErrorPage from "./pages/ErrorPage";
 import Documentation from "./pages/Documentation";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Nav from "./components/Nav";
 
 function App() {
-  const userState = true;
+  const userState = false;
 
   return (
     <div className="flex h-screen w-screen">
       <Router>
         <div className="flex h-screen w-screen bg-gray-100 dark:bg-black">
-          <Nav />
+          {userState && <Nav />}
           <div className="grow items-center">
             <Routes>
-              <Route exact path="/" element={<StarConnect />} />
+              <Route
+                exact
+                path="/"
+                element={userState ? <StarConnect /> : <Landing />}
+              />
               <Route
                 path="/new"
                 element={userState ? <StarConnect /> : <Register />}

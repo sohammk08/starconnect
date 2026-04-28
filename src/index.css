@@ -5,4 +5,6 @@
 @theme {
   /* Fonts */
   --font-sans: "Poppins", sans-serif;
+  --font-doto: "Doto", sans-serif;
+  --font-anton: "Anton", sans-serif;
 }
