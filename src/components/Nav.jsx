@@ -7,7 +7,10 @@ function Nav() {
 
   return (
     <div className="flex bg-black p-3 justify-between w-full rounded-lg">
-      <h2 className="text-white font-semibold flex items-center">
+      <h2
+        className="text-white font-semibold flex items-center cursor-pointer"
+        onClick={() => navigate("/")}
+      >
         <IoMdContact className="mr-2" />
         Star Connect
       </h2>

@@ -14,7 +14,7 @@ function App() {
   return (
     <div className="flex h-screen w-screen">
       <Router>
-        <div className="flex h-screen w-screen bg-gray-100 dark:bg-black">
+        <div className="flex h-screen w-screen bg-linear-to-tr from-[#0033ff]/50 via-[#977dff]/80 to-[#f1b2e1] dark:bg-black">
           {userState && <Nav />}
           <div className="grow items-center">
             <Routes>
