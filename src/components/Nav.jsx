@@ -28,7 +28,7 @@ function Nav() {
         <ul className="hidden md:flex space-x-3 my-auto">
           <li
             className="text-sm uppercase font-semibold bg-black text-white cursor-pointer rounded-lg px-2 py-1"
-            onClick={() => navigate("/docs")}
+            onClick={() => navigate("/documentation")}
           >
             Docs
           </li>
@@ -89,7 +89,7 @@ function Nav() {
 
         <ul className="flex flex-col items-center space-y-8">
           {[
-            { label: "Docs", path: "/docs" },
+            { label: "Docs", path: "/documentation" },
             { label: "Register", path: "/register" },
             { label: "Login", path: "/login" },
           ].map(({ label, path }, i) => (
