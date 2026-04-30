@@ -1,73 +1,89 @@
-import React from "react";
+import {
+  FiEye,
+  FiUser,
+  FiMail,
+  FiLock,
+  FiEyeOff,
+  FiUserPlus,
+} from "react-icons/fi";
 import Nav from "../components/Nav";
-import { FiStar } from "react-icons/fi";
-import { FaStar } from "react-icons/fa";
+import React, { useState } from "react";
 
 function Register() {
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
-    <div className="mx-4 mt-4">
+    <div className="mx-2 sm:mx-4 mt-4">
       <Nav />
-      <div className="flex h-[85vh] bg-black items-center mt-4 rounded-lg">
-        <img
-          src="/image.png"
-          className="h-[80vh] aspect-19/20 rounded-lg ml-5"
-          alt=""
-        />
-        <form className=" flex flex-col w-4xl h-[80vh] p-8 rounded-xl justify-center items-center shadow-lg ml-8 bg-gray-900">
-          <h2 className="text-center text-xl font-bold mb-4 text-white">
-            Create an account
-          </h2>
+      <div className="relative flex min-h-[85vh] bg-black items-center justify-center mt-4 rounded-lg overflow-hidden py-6 sm:py-0">
+        {/* bg */}
+        <div className="absolute inset-0 p-2 sm:p-5">
+          <img
+            src="/image.png"
+            className="h-full w-full object-cover rounded-lg"
+            alt=""
+          />
+        </div>
 
-          <div className="mb-3">
-            <input
-              type="email"
-              placeholder="Email address"
-              className="w-65 px-2 py-1.5 rounded-md border border-gray-700 bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-transparent transition"
-              required
-            />
-          </div>
+        <div className="absolute inset-0 bg-black/20 rounded-lg" />
 
-          <div className="mb-3">
-            <input
-              type="password"
-              placeholder="Password"
-              className="w-65 px-2 py-1.5 rounded-md border border-gray-700 bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-transparent transition"
-              required
-            />
-          </div>
-
-          <div className="mb-3">
-            <input
-              type="password"
-              placeholder="Confirm password"
-              className="w-65 px-2 py-1.5 rounded-md border border-gray-700 bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-transparent transition"
-              required
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="w-65 py-1.5 px-2 rounded-md text-white font-semibold bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 transition duration-200 mb-3"
-          >
-            Sign Up
-          </button>
-
-          <div className="relative mb-3">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-700"></div>
+        {/* Register Card */}
+        <div className="relative z-10 bg-white/85 backdrop-blur-md rounded-2xl shadow-2xl px-4 sm:px-8 py-6 sm:py-9 w-full max-w-[90%] sm:max-w-sm mx-3 sm:mx-4 overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-16 bg-linear-to-b from-blue-400/40 to-transparent rounded-t-2xl pointer-events-none" />
+          <div className="flex justify-center mb-2.5 sm:mb-4">
+            <div className="bg-sky-100 p-3 rounded-2xl">
+              <FiUserPlus className="text-sky-500 text-2xl" />
             </div>
           </div>
-
-          <p className="text-center text-xs text-gray-400 mt-4">
-            Already have an account?{" "}
-            <a
-              href="/login"
-              className="text-purple-400 hover:text-purple-300 font-medium"
-            >
-              Sign in
-            </a>
+          <h1 className="text-center text-base sm:text-xl font-bold text-gray-900 mb-1">
+            Create your account
+          </h1>
+          <p className="text-center text-xs sm:text-sm text-gray-500 mb-4 sm:mb-6 leading-snug">
+            Sign up to start saving contacts for reference or backups. For free!
           </p>
-        </form>
+          <div className="flex flex-col gap-2 sm:gap-3">
+            <div className="flex items-center gap-2 bg-gray-100 rounded-lg px-3 py-2 sm:py-2.5">
+              <FiUser className="text-gray-400 text-base shrink-0" />
+              <input
+                type="text"
+                placeholder="Your Name"
+                className="bg-transparent text-sm text-gray-700 placeholder-gray-400 outline-none w-full"
+              />
+            </div>
+
+            <div className="flex items-center gap-2 bg-gray-100 rounded-lg px-3 py-2.5">
+              <FiMail className="text-gray-400 text-base shrink-0" />
+              <input
+                type="email"
+                placeholder="Email"
+                className="bg-transparent text-sm text-gray-700 placeholder-gray-400 outline-none w-full"
+              />
+            </div>
+
+            <div className="flex items-center gap-2 bg-gray-100 rounded-lg px-3 py-2.5">
+              <FiLock className="text-gray-400 text-base shrink-0" />
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                className="bg-transparent text-sm text-gray-700 placeholder-gray-400 outline-none w-full"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="text-gray-400 hover:text-gray-600 transition-colors shrink-0"
+              >
+                {showPassword ? (
+                  <FiEye className="text-base" />
+                ) : (
+                  <FiEyeOff className="text-base" />
+                )}
+              </button>
+            </div>
+            <button className="mt-1 w-full bg-gray-900 hover:bg-gray-700 active:scale-95 transition-all text-white text-sm font-semibold rounded-lg py-2.5 sm:py-3">
+              Get Started
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
