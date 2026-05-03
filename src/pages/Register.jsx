@@ -8,9 +8,99 @@ import {
 } from "react-icons/fi";
 import Nav from "../components/Nav";
 import React, { useState } from "react";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
+import { auth, db } from "../../firebase";
+import { addDoc, collection } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
 function Register() {
+  let navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+
+  // Email validation logic
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return "Please enter a valid email address.";
+    }
+    return "";
+  };
+
+  // Password validation logic
+  const validatePassword = (password) => {
+    if (password.length < 8) {
+      return "Password must be at least 8 characters long.";
+    }
+    if (/\s/.test(password)) {
+      return "Password cannot contain spaces.";
+    }
+    return "";
+  };
+
+  // Trim whitespace
+  const sanitizeInput = (input) => {
+    return input.trim();
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Sanitize inputs
+    const sanitizedEmail = sanitizeInput(email);
+    const sanitizedUsername = sanitizeInput(username);
+    const sanitizedPassword = sanitizeInput(password);
+
+    // Check for empty fields
+    if (!sanitizedEmail || !sanitizedUsername || !sanitizedPassword) {
+      setPasswordError("All fields are required.");
+      return;
+    }
+
+    // Validate email
+    const emailError = validateEmail(sanitizedEmail);
+    if (emailError) {
+      setPasswordError(emailError);
+      return;
+    }
+
+    // Validate password
+    const passwordValidationError = validatePassword(sanitizedPassword);
+    if (passwordValidationError) {
+      setPasswordError(passwordValidationError);
+      return;
+    }
+
+    setPasswordError("");
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        sanitizedEmail,
+        sanitizedPassword,
+      );
+      await sendEmailVerification(userCredential.user);
+
+      await addDoc(collection(db, "users"), {
+        email: sanitizedEmail,
+        username: sanitizedUsername,
+        uid: userCredential.user.uid,
+      });
+      alert(
+        "A verification email has been sent to you. Please click on the link in the email to verify.",
+      );
+      navigate("/");
+    } catch (err) {
+      alert("Error: " + err.message);
+      setPasswordError(err.message);
+    }
+  };
 
   return (
     <div className="mx-2 sm:mx-4 mt-4">
@@ -47,7 +137,9 @@ function Register() {
               <input
                 type="text"
                 placeholder="Your Name"
-                className="bg-transparent text-sm text-gray-700 placeholder-gray-400 outline-none w-full"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="bg-transparent text-sm text-gray-700 placeholder-gray-400 outline-none w-full disabled:opacity-50"
               />
             </div>
 
@@ -56,7 +148,9 @@ function Register() {
               <input
                 type="email"
                 placeholder="Email"
-                className="bg-transparent text-sm text-gray-700 placeholder-gray-400 outline-none w-full"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="bg-transparent text-sm text-gray-700 placeholder-gray-400 outline-none w-full disabled:opacity-50"
               />
             </div>
 
@@ -65,12 +159,17 @@ function Register() {
               <input
                 type={showPassword ? "text" : "password"}
                 placeholder="Password"
-                className="bg-transparent text-sm text-gray-700 placeholder-gray-400 outline-none w-full"
+                value={password}
+                onChange={(e) => {
+                  setPassword(sanitizeInput(e.target.value));
+                  setPasswordError("");
+                }}
+                className="bg-transparent text-sm text-gray-700 placeholder-gray-400 outline-none w-full disabled:opacity-50"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="text-gray-400 hover:text-gray-600 transition-colors shrink-0"
+                className="text-gray-400 hover:text-gray-600 transition-colors shrink-0 disabled:opacity-50"
               >
                 {showPassword ? (
                   <FiEye className="text-base" />
@@ -79,7 +178,13 @@ function Register() {
                 )}
               </button>
             </div>
-            <button className="mt-1 w-full bg-gray-900 hover:bg-gray-700 active:scale-95 transition-all text-white text-sm font-semibold rounded-lg py-2.5 sm:py-3">
+            {passwordError && (
+              <p className="text-red-500 text-sm mt-1">{passwordError}</p>
+            )}
+            <button
+              className="mt-1 w-full bg-gray-900 hover:bg-gray-700 active:scale-95 transition-all text-white text-sm font-semibold rounded-lg py-2.5 sm:py-3 disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={handleSubmit}
+            >
               Get Started
             </button>
           </div>
