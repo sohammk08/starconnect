@@ -1,14 +1,30 @@
-import React from "react";
+import { useContext } from "react";
 import Nav from "../components/Nav";
+import { FaArrowLeft } from "react-icons/fa";
 import DevBadge from "../components/DevBadge";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/Auth/AuthContext";
 
 function Documentation() {
+  let navigate = useNavigate();
+  const { currentUser } = useContext(AuthContext);
+
   return (
     <div className="mx-2 sm:mx-4 mt-4">
-      <Nav />
+      {currentUser ? (
+        <button
+          className="flex bg-black font-medium p-2 items-center text-sm text-white/80 mb-4 gap-2 rounded-xl cursor-pointer"
+          onClick={() => navigate("/")}
+          title="Navigate to Home"
+        >
+          <FaArrowLeft />
+          Back to Home
+        </button>
+      ) : (
+        <Nav />
+      )}
 
       <div className="relative flex flex-col min-h-[85vh] bg-black items-center justify-center mt-4 rounded-lg overflow-hidden py-6 sm:py-12">
-        {/* <div className="space-y-5 sm:space-y-10 text-white px-5 my-auto items-center"> */}
         <div className="space-y-5 sm:space-y-10 text-white px-5 my-auto items-center max-w-xl">
           <h1 className="text-2xl sm:text-4xl md:text-4xl text-center font-bold text-white mb-5 sm:mb-14">
             Documentation

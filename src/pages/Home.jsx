@@ -1,7 +1,9 @@
-import { useState, useContext, useEffect } from "react";
-import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../firebase";
+import Sidebar from "../components/Sidebar";
+import { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../context/Auth/AuthContext";
+import ExpandedContactView from "../components/ExpandedContactView";
+import { collection, getDocs, query, where } from "firebase/firestore";
 
 function Home() {
   const [username, setUsername] = useState("");
@@ -10,6 +12,7 @@ function Home() {
   useEffect(() => {
     if (!currentUser) return;
 
+    // Fetch username
     const fetchUsername = async () => {
       try {
         if (currentUser?.email) {
@@ -31,8 +34,9 @@ function Home() {
   }, [currentUser]);
 
   return (
-    <div className="text-center mt-24 text-2xl font-medium">
-      Hey, {username}
+    <div className="flex bg-neutral-900 h-full transition-all duration-200 items-center justify-center">
+      <Sidebar />
+      <ExpandedContactView />
     </div>
   );
 }

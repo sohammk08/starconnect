@@ -1,3 +1,4 @@
+import React from "react";
 import { FaPlus } from "react-icons/fa";
 import { HiOutlineSearch } from "react-icons/hi";
 
@@ -7,7 +8,7 @@ function Search({ onAddContact }) {
       <input
         type="text"
         placeholder="Find a contact"
-        className="w-full p-2 pl-10 rounded 
+        className="w-full p-2 pl-10 rounded text-lg
           bg-gray-200 text-gray-900 placeholder-gray-500 
           dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400 
           focus:outline-none"
