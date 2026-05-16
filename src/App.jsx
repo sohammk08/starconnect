@@ -1,45 +1,48 @@
+import {
+  doc,
+  where,
+  query,
+  getDocs,
+  updateDoc,
+  collection,
+} from "firebase/firestore";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import { auth, db } from "../firebase";
 import Nav from "./components/Nav";
 import Landing from "./pages/Landing";
+import { auth, db } from "../firebase";
 import Settings from "./pages/Settings";
 import Register from "./pages/Register";
 import ErrorPage from "./pages/ErrorPage";
-import { useState, useEffect } from "react";
 import Documentation from "./pages/Documentation";
-import { onAuthStateChanged } from "firebase/auth";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import {
-  collection,
-  doc,
-  getDocs,
-  query,
-  updateDoc,
-  where,
-} from "firebase/firestore";
+import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "./context/Auth/AuthContext";
-import { useContext } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
+// Helper to avoid repetition in Home routes
+const HomeOr = ({ userState, username, fallback, contactAvatarPreference }) =>
+  userState ? (
+    <Home
+      username={username}
+      contactAvatarPreference={contactAvatarPreference}
+    />
+  ) : (
+    fallback
+  );
 
 function App() {
-  const { currentUser } = useContext(AuthContext);
+  const [labels, setLabels] = useState([]);
   const [username, setUsername] = useState("");
   const [userDocID, setUserDocID] = useState("");
-  const [userState, setUserState] = useState(false);
-
   // Set user authentication status
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUserState(!!user);
-    });
-    return () => unsubscribe();
-  }, []);
+  const { currentUser } = useContext(AuthContext);
+  const [contactAvatarPreference, setContactAvatarPreference] = useState(null);
 
   useEffect(() => {
     if (!currentUser) return;
 
-    // Fetch username
-    const fetchUsername = async () => {
+    // Fetch user doc
+    const fetchUserDoc = async () => {
       try {
         if (currentUser?.email) {
           const nameQuery = query(
@@ -50,6 +53,10 @@ function App() {
           querySnapshot.forEach((doc) => {
             setUsername(doc.data().username);
             setUserDocID(doc.id);
+            setContactAvatarPreference(
+              doc.data().contactAvatarPreference ?? "filled-color",
+            );
+            setLabels(doc.data().contactLabels);
           });
         }
       } catch (error) {
@@ -57,7 +64,7 @@ function App() {
       }
     };
 
-    fetchUsername();
+    fetchUserDoc();
   }, [currentUser]);
 
   // Update username
@@ -87,39 +94,64 @@ function App() {
           <div className="grow items-center">
             <Routes>
               <Route
-                exact
                 path="/"
-                element={userState ? <Home username={username} /> : <Landing />}
+                element={
+                  <HomeOr
+                    userState={!!currentUser}
+                    username={username}
+                    contactAvatarPreference={contactAvatarPreference}
+                    fallback={<Landing />}
+                  />
+                }
               />
               <Route
                 path="/add-contact"
                 element={
-                  userState ? <Home username={username} /> : <Register />
+                  <HomeOr
+                    userState={!!currentUser}
+                    username={username}
+                    contactAvatarPreference={contactAvatarPreference}
+                    fallback={<Register />}
+                  />
                 }
               />
               <Route
                 path="/:contact"
                 element={
-                  userState ? <Home username={username} /> : <Register />
+                  <HomeOr
+                    userState={!!currentUser}
+                    username={username}
+                    contactAvatarPreference={contactAvatarPreference}
+                    fallback={<Register />}
+                  />
                 }
               />
               <Route
                 path="/archive"
                 element={
-                  userState ? <Home username={username} /> : <Register />
+                  <HomeOr
+                    userState={!!currentUser}
+                    username={username}
+                    contactAvatarPreference={contactAvatarPreference}
+                    fallback={<Register />}
+                  />
                 }
               />
               <Route
                 path="/archive/:contact"
                 element={
-                  userState ? <Home username={username} /> : <Register />
+                  <HomeOr
+                    userState={!!currentUser}
+                    username={username}
+                    contactAvatarPreference={contactAvatarPreference}
+                    fallback={<Register />}
+                  />
                 }
               />
-              <Route path="/documentation" element={<Documentation />} />
               <Route
                 path="/settings"
                 element={
-                  userState ? (
+                  currentUser ? (
                     <Settings
                       username={username}
                       handleLogOut={handleLogout}
@@ -133,13 +165,26 @@ function App() {
               <Route
                 path="/register"
                 element={
-                  userState ? <Home username={username} /> : <Register />
+                  <HomeOr
+                    userState={!!currentUser}
+                    username={username}
+                    contactAvatarPreference={contactAvatarPreference}
+                    fallback={<Register />}
+                  />
                 }
               />
               <Route
                 path="/login"
-                element={userState ? <Home username={username} /> : <Login />}
+                element={
+                  <HomeOr
+                    userState={!!currentUser}
+                    username={username}
+                    contactAvatarPreference={contactAvatarPreference}
+                    fallback={<Login />}
+                  />
+                }
               />
+              <Route path="/documentation" element={<Documentation />} />
               <Route path="*" element={<ErrorPage />} />
             </Routes>
           </div>

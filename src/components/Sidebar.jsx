@@ -12,18 +12,15 @@ function Sidebar({
   const isArchivePage = false;
 
   return (
-    <div className="w-68 bg-[#1f1f1f] rounded-tl-lg rounded-bl-lg">
-      <h1
-        className="text-xl font-semibold text-gray-200 mt-4 ml-4 cursor-pointer"
-        onClick={() => {
-          handleNavigateHome();
-          clearSelectedContact(null);
-        }}
+    <div className="w-68 bg-[#1f1f1f] rounded-tl-lg rounded-bl-lg border-l border-y border-gray-800">
+      <div
+        className="flex space-x-2 text-white bg-black justify-center items-center cursor-pointer rounded-tl-lg p-5"
+        onClick={() => handleNavigateHome()}
       >
-        Star Connect
-      </h1>
-      <div className="w-68 h-[0.5px] bg-neutral-600 my-2" />
-      <div className="flex flex-col space-y-3 pr-4 py-2">
+        <img src="/logo.png" className="max-h-8" />
+        <span className="text-2xl font-anton">STAR CONNECT</span>
+      </div>
+      <div className="flex flex-col space-y-1 pr-4 py-2">
         {/* top-left menu */}
         <div className="flex flex-col pl-3 space-y-3">
           <>

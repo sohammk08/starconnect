@@ -2,9 +2,14 @@ import Sidebar from "../components/Sidebar";
 import { useState, useEffect } from "react";
 import ExpandedContactView from "./ExpandedContactView";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../context/Auth/AuthContext";
+import { collection, onSnapshot } from "firebase/firestore";
+import { db } from "../../firebase";
 
 function Home({ username }) {
   let navigate = useNavigate();
+  const { currentUser } = useContext(AuthContext);
   const location = useLocation();
   const [isAddingContact, setIsAddingContact] = useState(false);
   const [showArchived, setShowArchived] = useState(false);
@@ -13,6 +18,20 @@ function Home({ username }) {
   const [selectedLabel, setSelectedLabel] = useState(null);
   const [contacts, setContacts] = useState([]);
   const [selectedContact, setSelectedContact] = useState(null);
+
+  // Retrieve contacts
+  useEffect(() => {
+    if (!currentUser) return;
+
+    // Refer collection and set up a listener
+    const contactsCollection = collection(db, `contacts-${currentUser.email}`);
+    const unsubscribe = onSnapshot(contactsCollection, (snapshot) => {
+      setContacts(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    });
+
+    // Cleanup
+    return unsubscribe;
+  }, [currentUser, showArchived, showSorted]);
 
   // Detect URL changes and update UI state accordingly
   useEffect(() => {
