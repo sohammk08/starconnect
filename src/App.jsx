@@ -92,7 +92,7 @@ function App() {
                 element={userState ? <Home username={username} /> : <Landing />}
               />
               <Route
-                path="/new"
+                path="/add-contact"
                 element={
                   userState ? <Home username={username} /> : <Register />
                 }

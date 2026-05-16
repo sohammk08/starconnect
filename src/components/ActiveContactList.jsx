@@ -13,7 +13,7 @@ function ActiveContactList({
 
   return (
     <div>
-      <div className="w-72 border-t flex items-center justify-center border-gray-300 dark:border-gray-600 py-2 mt-2">
+      <div className="w-68 border-t flex items-center justify-center border-neutral-600 py-2 mt-2">
         {selectedLabel ? (
           <div className="mx-auto flex items-center text-gray-800 dark:text-gray-200">
             <MdArrowLeft
@@ -28,15 +28,15 @@ function ActiveContactList({
           </div>
         ) : (
           <div className="">
-            <span className="text-base font-semibold text-gray-800 dark:text-gray-200">
+            <span className="text-base font-semibold text-gray-200">
               All Contacts
             </span>
           </div>
         )}
       </div>
-      <div className="w-72 h-px bg-gray-300 dark:bg-gray-600" />
+      <div className="w-68 h-[0.5px] bg-neutral-600" />
       <div
-        className={`divide-y divide-gray-200 dark:divide-gray-700 h-[calc(100vh-16rem)] custom-scrollbar ${
+        className={`divide-y divide-gray-700 h-[calc(100vh-16rem)] custom-scrollbar ${
           filteredContacts.length > 7 ? "overflow-y-scroll" : ""
         }`}
       >
