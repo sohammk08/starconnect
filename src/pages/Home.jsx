@@ -1,23 +1,25 @@
+import { useContext } from "react";
+import { db } from "../../firebase";
 import Sidebar from "../components/Sidebar";
 import { useState, useEffect } from "react";
 import ExpandedContactView from "./ExpandedContactView";
-import { useNavigate, useLocation } from "react-router-dom";
-import { useContext } from "react";
 import { AuthContext } from "../context/Auth/AuthContext";
+import { useNavigate, useLocation } from "react-router-dom";
 import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "../../firebase";
 
 function Home({ username }) {
   let navigate = useNavigate();
-  const { currentUser } = useContext(AuthContext);
   const location = useLocation();
-  const [isAddingContact, setIsAddingContact] = useState(false);
-  const [showArchived, setShowArchived] = useState(false);
-  const [showSorted, setShowSorted] = useState(false);
-  const [sortedContacts, setSortedContacts] = useState([]);
-  const [selectedLabel, setSelectedLabel] = useState(null);
   const [contacts, setContacts] = useState([]);
+  const { currentUser } = useContext(AuthContext);
+  const [showSorted, setShowSorted] = useState(false);
+  const [showArchived, setShowArchived] = useState(false);
+  const [sortedContacts, setSortedContacts] = useState([]);
+  const [activeContacts, setActiveContacts] = useState([]);
+  const [selectedLabel, setSelectedLabel] = useState(null);
+  const [archivedContacts, setArchivedContacts] = useState([]);
   const [selectedContact, setSelectedContact] = useState(null);
+  const [isAddingContact, setIsAddingContact] = useState(false);
 
   // Retrieve contacts
   useEffect(() => {
@@ -103,12 +105,14 @@ function Home({ username }) {
     updateFromLocation();
   }, [location, contacts]);
 
+  // Handle 'add contact (+)' click
   const handleAddContact = () => {
     setIsAddingContact(true);
     setSelectedContact(null);
     navigate("/add-contact");
   };
 
+  // Handle navigating home
   const handleNavigateHome = () => {
     setSelectedContact(null);
     setShowSorted(false);
@@ -118,15 +122,49 @@ function Home({ username }) {
     navigate("/");
   };
 
+  // Navigate to archive
   const handleArchiveClick = () => {
     setShowArchived(true);
     setSelectedContact(null);
     navigate("/archive");
   };
 
+  // Filter contacts based on contactStatus
+  useEffect(() => {
+    const splitContacts = () => {
+      if (contacts) {
+        // Active contacts
+        const activeContacts = contacts.filter(
+          (contact) =>
+            contact.contactStatus === "active" ||
+            contact.contactStatus === "starred",
+        );
+        setActiveContacts(activeContacts);
+
+        // Archived contacts
+        const archivedContacts = contacts.filter(
+          (contact) => contact.contactStatus === "archived",
+        );
+        setArchivedContacts(archivedContacts);
+      } else {
+        setActiveContacts([]);
+        setArchivedContacts([]);
+      }
+    };
+
+    splitContacts();
+  }, [contacts]);
+
   return (
     <div className="flex bg-black h-full transition-all duration-200 items-center justify-center">
       <Sidebar
+        contacts={
+          showArchived
+            ? archivedContacts
+            : showSorted
+              ? sortedContacts
+              : activeContacts
+        }
         onAddContact={handleAddContact}
         handleNavigateHome={handleNavigateHome}
         handleArchiveClick={handleArchiveClick}

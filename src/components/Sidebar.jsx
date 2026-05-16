@@ -1,15 +1,19 @@
 import Search from "./Search";
 import { CgSortAz } from "react-icons/cg";
 import ActiveContactList from "./ActiveContactList";
+import ArchiveContactList from "./ArchiveContactList";
 import { MdArchive, MdLabelOutline } from "react-icons/md";
+import { useLocation } from "react-router-dom";
 
 function Sidebar({
+  contacts,
   onAddContact,
   handleNavigateHome,
   handleArchiveClick,
   clearSelectedContact,
 }) {
-  const isArchivePage = false;
+  const location = useLocation();
+  const isArchivePage = location.pathname.includes("/archive");
 
   return (
     <div className="w-68 bg-[#1f1f1f] rounded-tl-lg rounded-bl-lg border-l border-y border-gray-800">
@@ -20,9 +24,9 @@ function Sidebar({
         <img src="/logo.png" className="max-h-8" />
         <span className="text-2xl font-anton">STAR CONNECT</span>
       </div>
-      <div className="flex flex-col space-y-1 pr-4 py-2">
+      <div className="flex flex-col space-y-1 py-2">
         {/* top-left menu */}
-        <div className="flex flex-col pl-3 space-y-3">
+        <div className="flex flex-col pl-3 pr-4 space-y-3">
           <>
             <Search onAddContact={onAddContact} />
             <div className="flex justify-between relative space-x-1.5">
@@ -57,7 +61,7 @@ function Sidebar({
                     : "bg-gray-700 text-gray-200 hover:bg-gray-600 cursor-pointer"
                 }`}
                 // onClick={() => {
-                //   if (!isArchivePage) setIsSortModalOpen(!isSortModalOpen);
+                // if (!isArchivePage) setIsSortModalOpen(!isSortModalOpen);
                 // }}
                 // ref={sortButtonRef}
               >
@@ -66,7 +70,13 @@ function Sidebar({
             </div>
           </>
         </div>
-        <ActiveContactList />
+        {location.pathname.includes("/archive") ? (
+          <ArchiveContactList
+            contacts={contacts.filter((c) => c.contactStatus === "archived")}
+          />
+        ) : (
+          <ActiveContactList contacts={contacts} />
+        )}
       </div>
     </div>
   );

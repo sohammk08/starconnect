@@ -15,14 +15,14 @@ function ActiveContactList({
     <div>
       <div className="w-68 border-t flex items-center justify-center border-neutral-600 py-2 mt-2">
         {selectedLabel ? (
-          <div className="mx-auto flex items-center text-gray-800 dark:text-gray-200">
+          <div className="mx-auto flex items-center text-gray-200">
             <MdArrowLeft
               size={24}
-              className="rounded p-1 hover:bg-gray-300 dark:hover:bg-gray-700 absolute left-2 text-gray-600 dark:text-gray-300 cursor-pointer"
+              className="rounded p-1 hover:bg-gray-700 absolute left-2 text-gray-300 cursor-pointer"
               onClick={onResetFilter}
               title="All contacts"
             />
-            <span className="font-semibold mx-auto text-gray-800 dark:text-gray-200">
+            <span className="font-semibold mx-auto text-gray-200">
               {selectedLabel.labelName}
             </span>
           </div>
@@ -42,17 +42,17 @@ function ActiveContactList({
       >
         <ul>
           {filteredContacts.length === 0 && isSortRoute ? (
-            <li className="p-6 text-center text-gray-600 dark:text-gray-300">
+            <li className="p-6 text-center text-gray-300">
               No contacts with this label
             </li>
           ) : (
             filteredContacts.map((contact) => (
               <li
                 key={contact.id}
-                className="p-4 hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer flex items-center duration-150 ease-in-out text-gray-800 dark:text-gray-200"
+                className="p-4 hover:bg-gray-700 cursor-pointer flex items-center duration-150 ease-in-out text-gray-200"
                 onClick={() => onContactSelect(contact)}
               >
-                <span>contact.firstName + " " + contact.lastName</span>
+                <span>{contact.firstName + " " + contact.lastName}</span>
               </li>
             ))
           )}
