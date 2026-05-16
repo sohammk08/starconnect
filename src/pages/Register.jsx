@@ -6,15 +6,15 @@ import {
   FiEyeOff,
   FiUserPlus,
 } from "react-icons/fi";
-import Nav from "../components/Nav";
-import React, { useState } from "react";
 import {
-  createUserWithEmailAndPassword,
   sendEmailVerification,
+  createUserWithEmailAndPassword,
 } from "firebase/auth";
+import { useState } from "react";
+import Nav from "../components/Nav";
 import { auth, db } from "../../firebase";
-import { addDoc, collection } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import { addDoc, collection } from "firebase/firestore";
 
 function Register() {
   let navigate = useNavigate();
@@ -23,6 +23,22 @@ function Register() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
+
+  const errorMessages = {
+    "auth/invalid-email": "Invalid email address.",
+    "auth/user-disabled": "This account has been disabled.",
+    "auth/email-already-in-use": "An account already exists with this email.",
+    "auth/weak-password": "Password should be at least 6 characters.",
+    "auth/invalid-password": "Invalid password.",
+    "auth/missing-password": "Please enter your password.",
+    "auth/network-request-failed":
+      "Network error. Please check your connection.",
+    "auth/too-many-requests":
+      "Too many failed attempts. Please try again later.",
+    "auth/internal-error": "Something went wrong. Please try again.",
+    "auth/missing-email": "Please enter your email.",
+    "auth/operation-not-allowed": "This sign-up method is not allowed.",
+  };
 
   // Email validation logic
   const validateEmail = (email) => {
@@ -51,6 +67,7 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setPasswordError("");
 
     // Sanitize inputs
     const sanitizedEmail = sanitizeInput(email);
@@ -97,8 +114,10 @@ function Register() {
       );
       navigate("/");
     } catch (err) {
-      alert("Error: " + err.message);
-      setPasswordError(err.message);
+      const code = err.code || err.message;
+      setPasswordError(
+        errorMessages[code] || "Something went wrong. Please try again.",
+      );
     }
   };
 

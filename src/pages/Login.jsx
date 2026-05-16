@@ -1,17 +1,71 @@
 import Nav from "../components/Nav";
-import React, { useState } from "react";
+import { auth } from "../../firebase";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { FiMail, FiLock, FiEye, FiEyeOff, FiLogIn } from "react-icons/fi";
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
+  const passwordInputRef = useRef(null);
+
+  const errorMessages = {
+    "auth/invalid-email": "Invalid email address.",
+    "auth/user-disabled": "This account has been disabled.",
+    "auth/user-not-found": "No account found with this email.",
+    "auth/wrong-password": "Incorrect password.",
+    "auth/invalid-credential": "Invalid email or password.",
+    "auth/too-many-requests":
+      "Too many failed attempts. Please try again later.",
+    "auth/network-request-failed":
+      "Network error. Please check your connection.",
+    "auth/invalid-password": "Invalid password.",
+    "auth/missing-password": "Please enter your password.",
+    "auth/internal-error": "Something went wrong. Please try again.",
+    "auth/invalid-login-credentials": "Invalid email or password.",
+    "auth/missing-email": "Please enter your email.",
+    "auth/email-already-in-use": "An account already exists with this email.",
+    "auth/weak-password": "Password should be at least 6 characters.",
+    "auth/requires-recent-login": "Please log in again to continue.",
+  };
+
+  // Handle user login
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError("");
+    try {
+      await signInWithEmailAndPassword(auth, email.trim(), password);
+      navigate("/dashboard");
+    } catch (err) {
+      const code = err.code || err.message;
+      setError(
+        errorMessages[code] || "Something went wrong. Please try again.",
+      );
+    }
+  };
+
+  const handleEmailKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      passwordInputRef.current?.focus();
+    }
+  };
+
+  const handlePasswordKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleLogin(e);
+    }
+  };
 
   return (
     <div className="mx-2 sm:mx-4 mt-4">
       <Nav />
       <div className="relative flex min-h-[85vh] bg-black items-center justify-center mt-4 rounded-lg overflow-hidden py-6 sm:py-0">
-        {/* bg */}
         <div className="absolute inset-0 p-2 sm:p-5">
           <img
             src="/image.png"
@@ -44,14 +98,21 @@ function Login() {
                 type="email"
                 placeholder="Email"
                 className="bg-transparent text-sm text-gray-700 placeholder-gray-400 outline-none w-full"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                onKeyDown={handleEmailKeyDown}
               />
             </div>
             <div className="flex items-center gap-2 bg-gray-100 rounded-lg px-3 py-2 sm:py-2.5">
               <FiLock className="text-gray-400 text-base shrink-0" />
               <input
+                ref={passwordInputRef}
                 type={showPassword ? "text" : "password"}
                 placeholder="Password"
+                value={password}
                 className="bg-transparent text-sm text-gray-700 placeholder-gray-400 outline-none w-full"
+                onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={handlePasswordKeyDown}
               />
               <button
                 type="button"
@@ -65,6 +126,7 @@ function Login() {
                 )}
               </button>
             </div>
+            {error && <div className="text-xs text-red-500 px-1">{error}</div>}
             <div
               className="flex justify-end py-1 text-xs text-sky-500 hover:text-sky-400 transition-colors"
               onClick={() => navigate("/forgot-password")}
@@ -72,7 +134,7 @@ function Login() {
               Forgot password?
             </div>
             <button
-              onClick={() => navigate("/dashboard")}
+              onClick={handleLogin}
               className="mt-1 w-full bg-gray-900 hover:bg-gray-700 active:scale-95 transition-all text-white text-sm font-semibold rounded-lg py-2.5 sm:py-3"
             >
               Sign In
