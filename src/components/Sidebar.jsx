@@ -1,13 +1,14 @@
 import Search from "./Search";
 import { CgSortAz } from "react-icons/cg";
+import { useLocation } from "react-router-dom";
 import ActiveContactList from "./ActiveContactList";
 import ArchiveContactList from "./ArchiveContactList";
 import { MdArchive, MdLabelOutline } from "react-icons/md";
-import { useLocation } from "react-router-dom";
 
 function Sidebar({
   contacts,
   onAddContact,
+  onContactSelect,
   handleNavigateHome,
   handleArchiveClick,
   clearSelectedContact,
@@ -73,9 +74,13 @@ function Sidebar({
         {location.pathname.includes("/archive") ? (
           <ArchiveContactList
             contacts={contacts.filter((c) => c.contactStatus === "archived")}
+            onContactSelect={onContactSelect}
           />
         ) : (
-          <ActiveContactList contacts={contacts} />
+          <ActiveContactList
+            contacts={contacts}
+            onContactSelect={onContactSelect}
+          />
         )}
       </div>
     </div>

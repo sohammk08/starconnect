@@ -7,7 +7,7 @@ import { AuthContext } from "../context/Auth/AuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import { collection, onSnapshot } from "firebase/firestore";
 
-function Home({ username }) {
+function Home({ username, contactAvatarPreference }) {
   let navigate = useNavigate();
   const location = useLocation();
   const [contacts, setContacts] = useState([]);
@@ -129,6 +129,55 @@ function Home({ username }) {
     navigate("/archive");
   };
 
+  // Handle action on clicking contact
+  const handleSelectContact = (selectedContact) => {
+    if (!selectedContact) {
+      setSelectedContact(null);
+      return;
+    }
+
+    let contactName;
+    setIsAddingContact(false);
+    setSelectedContact(selectedContact);
+
+    contactName = selectedContact.lastName
+      ? (
+          selectedContact.firstName +
+          "-" +
+          selectedContact.lastName
+        ).toLowerCase()
+      : selectedContact.firstName.toLowerCase();
+
+    // If archived, keep old archival path
+    if (selectedContact.contactStatus === "archived") {
+      navigate(`/archive/${contactName}`);
+      return;
+    }
+
+    // If the current route is a label route, navigate to the label-specific contact route:
+    // {/starconnect/label/{labelName}/{contactName}
+    if (location.pathname.includes("/label/")) {
+      // extract labelName from path
+      const afterLabelSegment = location.pathname.split("/label/")[1] || "";
+      const labelNameFromPath = afterLabelSegment.split("/")[0];
+
+      if (labelNameFromPath) {
+        navigate(`/label/${labelNameFromPath}/${contactName}`);
+        return;
+      }
+    }
+  };
+
+  // Function to handle archiving a contact
+  const handleContactArchived = (contactId) => {
+    setContacts((prevContacts) =>
+      prevContacts.filter((contact) => contact.id !== contactId),
+    );
+    if (selectedContact && selectedContact.id === contactId) {
+      setSelectedContact(null);
+    }
+  };
+
   // Filter contacts based on contactStatus
   useEffect(() => {
     const splitContacts = () => {
@@ -166,13 +215,18 @@ function Home({ username }) {
               : activeContacts
         }
         onAddContact={handleAddContact}
+        onContactSelect={handleSelectContact}
         handleNavigateHome={handleNavigateHome}
         handleArchiveClick={handleArchiveClick}
         clearSelectedContact={setSelectedContact}
       />
       <ExpandedContactView
+        contactAvatarPreference={contactAvatarPreference}
+        handleNavigateHome={handleNavigateHome}
         isAddingContact={isAddingContact}
+        onContactArchived={handleContactArchived}
         setIsAddingContact={setIsAddingContact}
+        selectedContact={selectedContact}
       />
     </div>
   );
