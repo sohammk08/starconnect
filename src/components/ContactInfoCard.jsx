@@ -67,9 +67,11 @@ function ContactInfoCard({
   ];
 
   return (
-    <div className="bg-[#1f1f1f] p-4 rounded-xl border border-gray-700 flex-1 min-w-0">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-xl font-semibold text-gray-200">Contact Info</h3>
+    <div className="bg-[#1f1f1f] p-3 sm:p-4 rounded-xl border border-gray-700 flex-1 min-w-0">
+      <div className="flex items-center justify-between mb-3 sm:mb-4">
+        <h3 className="text-lg sm:text-xl font-semibold text-gray-200">
+          Contact Info
+        </h3>
         {isEditing ? (
           <div className="flex items-center space-x-3">
             <FiCheck
@@ -95,15 +97,20 @@ function ContactInfoCard({
         )}
       </div>
 
-      <ul className="space-y-3 ml-1 text-gray-300">
+      <ul className="space-y-2 sm:space-y-3 ml-1 text-gray-300">
         {FIELDS.map(({ key, label, type, editOnly, options }) => {
           const value = contact?.[key];
           const show = isEditing || (!editOnly && value);
           if (!show) return null;
 
           return (
-            <li key={key} className="flex items-center gap-3">
-              <span className="w-24 font-semibold shrink-0">{label}:</span>
+            <li
+              key={key}
+              className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3"
+            >
+              <span className="w-full sm:w-24 font-semibold shrink-0 text-sm sm:text-base text-gray-400 sm:text-gray-300">
+                {label}:
+              </span>
 
               {isEditing ? (
                 type === "select" ? (
@@ -133,7 +140,7 @@ function ContactInfoCard({
                 )
               ) : (
                 <span
-                  className="flex-1 hover:text-white transition-colors cursor-pointer truncate"
+                  className="flex-1 hover:text-white transition-colors cursor-pointer truncate text-sm sm:text-base"
                   title={`Copy ${label.toLowerCase()}`}
                   onClick={() =>
                     handleCopy(type === "date" ? formatDate(value) : value)

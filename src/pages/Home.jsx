@@ -204,30 +204,40 @@ function Home({ username, contactAvatarPreference }) {
     splitContacts();
   }, [contacts]);
 
+  const showExpanded = selectedContact || isAddingContact;
+
   return (
-    <div className="flex bg-black h-full transition-all duration-200 items-center justify-center">
-      <Sidebar
-        contacts={
-          showArchived
-            ? archivedContacts
-            : showSorted
-              ? sortedContacts
-              : activeContacts
-        }
-        onAddContact={handleAddContact}
-        onContactSelect={handleSelectContact}
-        handleNavigateHome={handleNavigateHome}
-        handleArchiveClick={handleArchiveClick}
-        clearSelectedContact={setSelectedContact}
-      />
-      <ExpandedContactView
-        contactAvatarPreference={contactAvatarPreference}
-        handleNavigateHome={handleNavigateHome}
-        isAddingContact={isAddingContact}
-        onContactArchived={handleContactArchived}
-        setIsAddingContact={setIsAddingContact}
-        selectedContact={selectedContact}
-      />
+    <div className="flex bg-black md:px-45 h-full transition-all duration-200 items-center justify-center overflow-hidden">
+      <div
+        className={`w-full md:w-auto ${showExpanded ? "hidden md:block" : "block"}`}
+      >
+        <Sidebar
+          contacts={
+            showArchived
+              ? archivedContacts
+              : showSorted
+                ? sortedContacts
+                : activeContacts
+          }
+          onAddContact={handleAddContact}
+          onContactSelect={handleSelectContact}
+          handleNavigateHome={handleNavigateHome}
+          handleArchiveClick={handleArchiveClick}
+          clearSelectedContact={setSelectedContact}
+        />
+      </div>
+      <div
+        className={`w-full md:flex-1 ${showExpanded ? "block" : "hidden md:block"}`}
+      >
+        <ExpandedContactView
+          contactAvatarPreference={contactAvatarPreference}
+          handleNavigateHome={handleNavigateHome}
+          isAddingContact={isAddingContact}
+          onContactArchived={handleContactArchived}
+          setIsAddingContact={setIsAddingContact}
+          selectedContact={selectedContact}
+        />
+      </div>
     </div>
   );
 }

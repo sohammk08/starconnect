@@ -1,4 +1,5 @@
 import React from "react";
+import { MdArrowLeft } from "react-icons/md";
 import { useLocation } from "react-router-dom";
 
 function ActiveContactList({
@@ -12,8 +13,8 @@ function ActiveContactList({
   const isSortRoute = location.pathname.includes("/label/");
 
   return (
-    <div>
-      <div className="w-68 border-t flex items-center justify-center border-neutral-600 py-2 mt-2">
+    <div className="w-full">
+      <div className="w-full border-t flex items-center justify-center border-neutral-600 py-2 mt-2">
         {selectedLabel ? (
           <div className="mx-auto flex items-center text-gray-200">
             <MdArrowLeft
@@ -34,7 +35,7 @@ function ActiveContactList({
           </div>
         )}
       </div>
-      <div className="w-68 h-[0.5px] bg-neutral-600" />
+      <div className="w-full h-[0.5px] bg-neutral-600" />
       <div
         className={`divide-y divide-gray-700 h-[calc(100vh-16rem)] custom-scrollbar ${
           filteredContacts.length > 7 ? "overflow-y-scroll" : ""

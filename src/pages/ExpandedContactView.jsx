@@ -237,8 +237,8 @@ function ExpandedContactView({
   }
 
   return (
-    <div className="flex bg-[#121212] p-4 relative rounded-r-lg">
-      <div className="flex justify-center items-center min-h-[calc(100vh-3.5rem)] w-6xl">
+    <div className="flex bg-[#121212] p-4 relative rounded-r-lg overflow-y-auto">
+      <div className="flex justify-center items-center min-h-[calc(100vh-3.5rem)] w-full max-w-7xl">
         {localContact ? (
           <div className="w-full max-w-7xl h-full">
             {/* Top toolbar */}
@@ -247,12 +247,12 @@ function ExpandedContactView({
                 onClick={handleNavigateHome}
                 className="text-gray-400 hover:text-white transition-colors p-1"
               >
-                <FiArrowLeft size={20} title="Go back" />
+                <FiArrowLeft title="Go back" />
               </button>
 
               <div className="flex items-center space-x-6 pr-2">
                 <button
-                  className="text-gray-400 hover:text-white cursor-pointer disabled:opacity-50"
+                  className="text-gray-400 hover:text-white text-lg md:text-xl cursor-pointer disabled:opacity-50"
                   onClick={handleContactStarring}
                   disabled={loading.starring}
                   title={
@@ -260,29 +260,29 @@ function ExpandedContactView({
                   }
                 >
                   {localContact.contactStatus === "starred" ? (
-                    <AiFillStar size={23} className="text-yellow-400" />
+                    <AiFillStar className="text-yellow-400" />
                   ) : (
-                    <AiOutlineStar size={23} />
+                    <AiOutlineStar />
                   )}
                 </button>
 
                 <button
-                  className="text-gray-400 hover:text-white cursor-pointer"
+                  className="text-gray-400 hover:text-white text-lg md:text-xl cursor-pointer"
                   title="Share"
                 >
-                  <MdOutlineShare size={23} />
+                  <MdOutlineShare />
                 </button>
 
                 <button
-                  className="text-gray-400 hover:text-white cursor-pointer"
+                  className="text-gray-400 hover:text-white text-lg md:text-xl cursor-pointer"
                   onClick={handleOpenLabelModal}
                   title="Label"
                 >
-                  <MdLabelOutline size={23} />
+                  <MdLabelOutline />
                 </button>
 
                 <button
-                  className="text-gray-400 hover:text-white cursor-pointer disabled:opacity-50"
+                  className="text-gray-400 hover:text-white cursor-pointer text-lg md:text-xl disabled:opacity-50"
                   onClick={
                     localContact.contactStatus === "archived"
                       ? handleContactUnarchiving
@@ -296,18 +296,18 @@ function ExpandedContactView({
                   }
                 >
                   {localContact.contactStatus === "archived" ? (
-                    <MdUnarchive size={23} />
+                    <MdUnarchive />
                   ) : (
-                    <MdArchive size={23} />
+                    <MdArchive />
                   )}
                 </button>
 
                 <button
-                  className="text-gray-400 hover:text-red-600 cursor-pointer"
+                  className="text-gray-400 hover:text-red-600 text-lg md:text-xl cursor-pointer"
                   onClick={() => setContactDeletionModal(true)}
                   title="Delete"
                 >
-                  <AiOutlineDelete size={23} />
+                  <AiOutlineDelete />
                 </button>
               </div>
             </div>
@@ -318,7 +318,7 @@ function ExpandedContactView({
                 preference={contactAvatarPreference}
                 className="mr-3"
               />
-              <h2 className="text-3xl font-medium text-gray-100">
+              <h2 className="text-xl md:text-3xl font-medium text-gray-100">
                 {`${localContact.firstName || ""} ${localContact.lastName || ""}`.trim()}
               </h2>
             </div>
@@ -337,7 +337,7 @@ function ExpandedContactView({
               {/* Socials */}
               <div className="bg-[#1f1f1f] w-full lg:w-96 shrink-0 h-28 p-3 rounded-xl border border-gray-700">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-xl font-semibold text-gray-200">
+                  <h3 className="text-lg md:text-xl font-semibold text-gray-200">
                     Socials
                   </h3>
                   <GoLinkExternal

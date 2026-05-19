@@ -8,7 +8,7 @@ function Search({ onAddContact }) {
       <input
         type="text"
         placeholder="Find a contact"
-        className="w-full p-2 pl-10 rounded bg-gray-700 text-gray-100 placeholder-gray-400 focus:outline-none"
+        className="w-full p-1.5 pl-10 rounded-md bg-gray-700 text-gray-100 placeholder-gray-400 focus:outline-none"
       />
       <HiOutlineSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-300" />
       <div className="absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer text-blue-500 hover:text-blue-600 transition">

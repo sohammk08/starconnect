@@ -57,7 +57,7 @@ function AddContact({ toggle }) {
   };
 
   return (
-    <div className="h-full w-full p-6 bg-[#121212] text-gray-100 custom-scrollbar overflow-y-auto relative">
+    <div className="h-full w-full p-6 bg-[#121212] text-gray-100 overflow-y-auto relative">
       {/* Close button */}
       <button
         className="absolute top-4 right-4 text-gray-300 hover:text-white"
@@ -69,7 +69,6 @@ function AddContact({ toggle }) {
         <FiX size={24} />
       </button>
 
-      {/* Form header */}
       <h1 className="text-center text-xl font-semibold mb-6">Add Contact</h1>
 
       {/* Contact form */}

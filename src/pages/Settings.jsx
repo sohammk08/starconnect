@@ -13,8 +13,8 @@ function Settings({ username, handleUpdateUsername, handleLogOut }) {
   const [newUsername, setNewUsername] = useState("");
 
   return (
-    <div className="relative bg-black min-h-screen flex justify-center items-start md:items-center pt-16 px-4 pb-21">
-      <div className="absolute top-4 left-4">
+    <div className="relative bg-black min-h-screen flex justify-center items-start md:items-center px-4 py-20 md:py-0">
+      <div className="absolute top-4 left-4 z-10">
         {currentUser ? (
           <button
             className="flex bg-neutral-800 font-medium p-2 items-center text-sm text-white/80 gap-2 rounded-xl cursor-pointer"
@@ -30,22 +30,26 @@ function Settings({ username, handleUpdateUsername, handleLogOut }) {
       </div>
 
       <div className="flex flex-col w-full max-w-5xl">
-        <img src="fullLogo.png" className="max-h-20 mx-auto mb-5" alt="" />
+        <img
+          src="fullLogo.png"
+          className="max-h-16 sm:max-h-20 mx-auto mb-5"
+          alt=""
+        />
         <div className="flex flex-col bg-neutral-900 justify-center items-center p-4 sm:p-5 w-full text-white rounded-xl">
           <h2 className="text-2xl sm:text-3xl font-bold mb-4 font-doto">
             Hey, <span className="text-blue-500 italic">{username}</span>
           </h2>
           <div className="p-4 sm:p-5 border border-neutral-600 rounded w-full">
-            <div className="flex items-center gap-3 mb-3">
-              <IoMdSettings className="text-blue-600 text-3xl sm:text-4xl shrink-0" />
-              <div className="flex flex-col">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-3">
+              <div className="flex gap-1">
+                <IoMdSettings className="text-blue-600 text-3xl sm:text-4xl shrink-0" />
                 <h2 className="text-lg sm:text-xl font-medium">Settings</h2>
-                <p className="text-sm text-gray-400">
-                  Manage and personalize your <bold>Star Connect</bold>{" "}
-                  experience. Update your account information, adjust
-                  preferences, and more to stay connected, <i>always</i>.
-                </p>
               </div>
+              <p className="text-sm text-gray-400">
+                Manage and personalize your <bold>Star Connect</bold>{" "}
+                experience. Update your account information, adjust preferences,
+                and more to stay connected, <i>always</i>.
+              </p>
             </div>
             <div className="flex flex-col sm:flex-row items-stretch gap-3 mb-3">
               {/* Username update */}
@@ -58,7 +62,7 @@ function Settings({ username, handleUpdateUsername, handleLogOut }) {
                   You can update your username by putting in the updated
                   username below and click update.
                 </p>
-                <div className="flex items-center gap-3">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                   <input
                     type="text"
                     placeholder="Enter new username"
