@@ -17,13 +17,13 @@ function Nav() {
   return (
     <>
       <div className="flex bg-black p-3 justify-between w-full rounded-lg">
-        <h2
-          className="text-white font-semibold flex items-center cursor-pointer"
+        <div
+          className="flex gap-1 text-white bg-black justify-center items-center cursor-pointer"
           onClick={() => navigate("/")}
         >
-          <IoMdContact className="mr-2" />
-          Star Connect
-        </h2>
+          <img src="/logo.png" className="h-5 md:h-6" />
+          <span className="text-xl md:text-xl font-anton">STAR CONNECT</span>
+        </div>
 
         <ul className="hidden md:flex space-x-3 my-auto">
           <li

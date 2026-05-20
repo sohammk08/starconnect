@@ -39,7 +39,7 @@ function Login() {
     setError("");
     try {
       await signInWithEmailAndPassword(auth, email.trim(), password);
-      navigate("/dashboard");
+      navigate("/");
     } catch (err) {
       const code = err.code || err.message;
       setError(

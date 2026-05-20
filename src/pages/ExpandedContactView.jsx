@@ -245,7 +245,7 @@ function ExpandedContactView({
             <div className="flex items-center justify-between ml-2 mb-6">
               <button
                 onClick={handleNavigateHome}
-                className="text-gray-400 hover:text-white transition-colors p-1"
+                className="text-gray-400 hover:text-white cursor-pointer transition-colors p-1"
               >
                 <FiArrowLeft title="Go back" />
               </button>
