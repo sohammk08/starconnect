@@ -40,8 +40,8 @@ function Settings({ username, handleUpdateUsername, handleLogOut }) {
             Hey, <span className="text-blue-500 italic">{username}</span>
           </h2>
           <div className="p-4 sm:p-5 border border-neutral-600 rounded w-full">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-3">
-              <div className="flex gap-1">
+            <div className="flex flex-col items-start gap-1.5 mb-3">
+              <div className="flex items-center gap-1">
                 <IoMdSettings className="text-blue-600 text-3xl sm:text-4xl shrink-0" />
                 <h2 className="text-lg sm:text-xl font-medium">Settings</h2>
               </div>
@@ -51,7 +51,7 @@ function Settings({ username, handleUpdateUsername, handleLogOut }) {
                 and more to stay connected, <i>always</i>.
               </p>
             </div>
-            <div className="flex flex-col sm:flex-row items-stretch gap-3 mb-3">
+            <div className="flex flex-col md:flex-row items-stretch gap-3 mb-3">
               {/* Username update */}
               <div className="flex-1 p-3 border border-neutral-600 rounded-lg space-y-1.5">
                 <div className="flex items-center gap-1">
@@ -62,7 +62,7 @@ function Settings({ username, handleUpdateUsername, handleLogOut }) {
                   You can update your username by putting in the updated
                   username below and click update.
                 </p>
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3">
                   <input
                     type="text"
                     placeholder="Enter new username"

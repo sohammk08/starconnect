@@ -27,7 +27,7 @@ function Documentation() {
       <div className="relative flex flex-col bg-black items-center justify-center rounded-lg overflow-hidden py-6 md:py-17">
         <div className="space-y-5 sm:space-y-10 text-white px-5 my-auto items-center max-w-xl">
           <div className="flex flex-col sm:flex-row items-center sm:mr-12 justify-center space-y-3 sm:space-y-0 sm:space-x-5">
-            <img src="/fullLogo.png" alt="" className="max-h-14 md:max-h-15" />
+            <img src="/fullLogo.png" alt="" className="max-h-15 md:max-h-25" />
             <h1 className="text-2xl md:text-3xl text-center font-bold text-white">
               Documentation
             </h1>
