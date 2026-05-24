@@ -1,19 +1,25 @@
-import { db } from "../../firebase";
-import AddContact from "../components/AddContact";
-import { Link, useNavigate } from "react-router-dom";
-import ContactAvatar from "../components/ContactAvatar";
-import { AuthContext } from "../context/Auth/AuthContext";
-import ContactInfoCard from "../components/ContactInfoCard";
-import { doc, updateDoc, deleteDoc } from "firebase/firestore";
-import { useState, useEffect, useContext, useMemo, useCallback } from "react";
-
+import {
+  useRef,
+  useMemo,
+  useState,
+  useEffect,
+  useContext,
+  useCallback,
+} from "react";
 import {
   MdArchive,
   MdUnarchive,
   MdLabelOutline,
   MdOutlineShare,
 } from "react-icons/md";
+import { db } from "../../firebase";
 import { GoLinkExternal } from "react-icons/go";
+import AddContact from "../components/AddContact";
+import { Link, useNavigate } from "react-router-dom";
+import ContactAvatar from "../components/ContactAvatar";
+import { AuthContext } from "../context/Auth/AuthContext";
+import ContactInfoCard from "../components/ContactInfoCard";
+import { doc, updateDoc, deleteDoc } from "firebase/firestore";
 import { FiArrowLeft, FiCheck, FiTrash, FiX } from "react-icons/fi";
 import { AiFillStar, AiOutlineDelete, AiOutlineStar } from "react-icons/ai";
 
@@ -27,7 +33,9 @@ function ExpandedContactView({
   contactAvatarPreference,
 }) {
   const navigate = useNavigate();
+  const labelModalRef = useRef(null);
   const [loading, setLoading] = useState({});
+  const contactDeletionModalRef = useRef(null);
   const { currentUser } = useContext(AuthContext);
   const [isEditing, setIsEditing] = useState(false);
   const [labelModal, setLabelModal] = useState(false);
@@ -69,6 +77,36 @@ function ExpandedContactView({
     setSelectedLabels(normalizeLabels(selectedContact.labels || []));
     setIsEditing(false);
   }, [selectedContact]);
+
+  // Handle clicks outside modal & ESC key press
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        (contactDeletionModalRef.current &&
+          !contactDeletionModalRef.current.contains(event.target)) ||
+        (labelModalRef.current && !labelModalRef.current.contains(event.target))
+      ) {
+        setContactDeletionModal(false);
+        setLabelModal(false);
+      }
+    };
+
+    // Handle ESC key press
+    const handleEscKey = (event) => {
+      if (event.key === "Escape") {
+        setContactDeletionModal(false);
+        setLabelModal(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscKey);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscKey);
+    };
+  }, []);
 
   const selectedLabelNames = useMemo(
     () => new Set(selectedLabels.map((l) => l.labelName)),
@@ -367,7 +405,10 @@ function ExpandedContactView({
             {/* Label Modal */}
             {labelModal && (
               <div className="fixed inset-0 flex items-center justify-center bg-black/70 z-50">
-                <div className="relative bg-[#1f1f1f] rounded-lg shadow-md p-4 w-72 text-gray-100">
+                <div
+                  className="relative bg-[#1f1f1f] rounded-lg shadow-md p-4 w-72 text-gray-100"
+                  ref={labelModalRef}
+                >
                   <div className="flex justify-between items-center">
                     <h2 className="text-lg font-medium">Labels</h2>
                     <FiX
@@ -449,7 +490,10 @@ function ExpandedContactView({
       {/* Delete Modal */}
       {contactDeletionModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
-          <div className="relative bg-[#1f1f1f] rounded-lg shadow-md p-4 w-[90%] md:w-80 space-y-3">
+          <div
+            className="relative bg-[#1f1f1f] rounded-lg shadow-md p-4 w-[90%] md:w-80 space-y-3"
+            ref={contactDeletionModalRef}
+          >
             <div className="flex justify-between items-center mb-3 px-1">
               <h2 className="text-lg font-semibold text-gray-100">
                 Delete Contact

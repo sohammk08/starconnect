@@ -17,12 +17,6 @@ function Landing() {
 
         {/* Right section */}
         <div className="flex flex-col max-w-lg w-full items-center lg:items-start text-center lg:text-left">
-          <div className="max-w-[17.8rem] inline-flex items-center gap-[0.65rem] px-[1.3rem] py-[0.65rem] rounded-full bg-white/10 border border-white/10 animate-fade-in">
-            <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-            <span className="text-sm text-gray-300">
-              Completely Free & Open Source
-            </span>
-          </div>
           <h1 className="text-[1.95rem] sm:text-[3rem] md:text-[4.5rem] lg:text-[5.85rem] font-anton font-medium flex max-w-sm sm:max-w-xl lg:max-w-none text-center lg:text-left rounded-lg text-white mt-4 lg:mt-0">
             STAR CONNECT
           </h1>

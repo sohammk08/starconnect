@@ -1,17 +1,28 @@
-import { useContext } from "react";
+import {
+  doc,
+  where,
+  query,
+  getDocs,
+  updateDoc,
+  onSnapshot,
+  arrayUnion,
+  collection,
+  arrayRemove,
+} from "firebase/firestore";
 import { db } from "../../firebase";
 import Sidebar from "../components/Sidebar";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import ExpandedContactView from "./ExpandedContactView";
 import { AuthContext } from "../context/Auth/AuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
-import { collection, onSnapshot } from "firebase/firestore";
 
 function Home({ username, contactAvatarPreference }) {
   let navigate = useNavigate();
   const location = useLocation();
+  const [labels, setLabels] = useState([]);
   const [contacts, setContacts] = useState([]);
   const { currentUser } = useContext(AuthContext);
+  const [labelInput, setLabelInput] = useState("");
   const [showSorted, setShowSorted] = useState(false);
   const [showArchived, setShowArchived] = useState(false);
   const [sortedContacts, setSortedContacts] = useState([]);
@@ -34,6 +45,23 @@ function Home({ username, contactAvatarPreference }) {
     // Cleanup
     return unsubscribe;
   }, [currentUser, showArchived, showSorted]);
+
+  // Retrieve labels
+  useEffect(() => {
+    if (!currentUser) return;
+
+    const uDocQuery = query(
+      collection(db, "users"),
+      where("email", "==", currentUser.email),
+    );
+
+    // Set up the Firestore listener
+    const unsubscribe = onSnapshot(uDocQuery, (querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        setLabels(doc.data().contactLabels || []);
+      });
+    });
+  }, [currentUser]);
 
   // Detect URL changes and update UI state accordingly
   useEffect(() => {
@@ -129,6 +157,12 @@ function Home({ username, contactAvatarPreference }) {
     navigate("/archive");
   };
 
+  // Handle sort button click
+  const handleSortClick = (label) => {
+    setShowSorted(true);
+    navigate(`/label/${label.labelName}`);
+  };
+
   // Handle action on clicking contact
   const handleSelectContact = (selectedContact) => {
     if (!selectedContact) {
@@ -155,7 +189,7 @@ function Home({ username, contactAvatarPreference }) {
     }
 
     // If the current route is a label route, navigate to the label-specific contact route:
-    // {/starconnect/label/{labelName}/{contactName}
+    // {/label/{labelName}/{contactName}
     if (location.pathname.includes("/label/")) {
       // extract labelName from path
       const afterLabelSegment = location.pathname.split("/label/")[1] || "";
@@ -204,6 +238,100 @@ function Home({ username, contactAvatarPreference }) {
     splitContacts();
   }, [contacts]);
 
+  // Function to handle adding a new label
+  const handleAddLabel = async (labelInput) => {
+    if (labelInput.trim() === "") return;
+
+    const newLabel = { labelName: labelInput.trim() };
+    const updatedLabels = [...labels, newLabel];
+    setLabels(updatedLabels);
+
+    if (currentUser) {
+      try {
+        const userRef = collection(db, "users");
+        const q = query(userRef, where("email", "==", currentUser.email));
+        const snapshot = await getDocs(q);
+
+        if (!snapshot.empty) {
+          const userDoc = snapshot.docs[0];
+          const userDocRef = doc(db, "users", userDoc.id);
+          await updateDoc(userDocRef, {
+            contactLabels: arrayUnion(newLabel),
+          });
+
+          setLabelInput("");
+        }
+      } catch (error) {
+        alert("There was an error adding the label. Please try again later.");
+      }
+    }
+  };
+
+  // Function to handle the editing of a label
+  const handleEditLabel = async (index, labelText) => {
+    const oldLabel = labels[index];
+    const updatedLabels = labels.map((label, i) =>
+      i === index ? { labelName: labelText } : label,
+    );
+    setLabels(updatedLabels);
+
+    if (currentUser) {
+      try {
+        const userRef = collection(db, "users");
+        const q = query(userRef, where("email", "==", currentUser.email));
+        const snapshot = await getDocs(q);
+
+        if (!snapshot.empty) {
+          const userDoc = snapshot.docs[0];
+          const userDocRef = doc(db, "users", userDoc.id);
+
+          // Add the new label and then delete the old one
+          await updateDoc(userDocRef, {
+            contactLabels: arrayUnion({ labelName: labelText }),
+          });
+
+          await updateDoc(userDocRef, {
+            contactLabels: arrayRemove(oldLabel),
+          });
+
+          setEditLabelId(null);
+          setEditLabelValue("");
+        }
+      } catch (error) {
+        alert(
+          "There was an error editing the label. Please try again or after some time.",
+        );
+      }
+    }
+  };
+
+  // Handle the deletion of a label
+  const handleDeleteLabel = async (index) => {
+    const labeltoDelete = labels[index];
+    const updatedLabels = labels.filter((_, i) => i !== index);
+    setLabels(updatedLabels);
+
+    if (currentUser) {
+      try {
+        const userRef = collection(db, "users");
+        const q = query(userRef, where("email", "==", currentUser.email));
+        const snapshot = await getDocs(q);
+
+        if (!snapshot.empty) {
+          const userDoc = snapshot.docs[0];
+          const userDocRef = doc(db, "users", userDoc.id);
+          await updateDoc(userDocRef, {
+            contactLabels: arrayRemove(labeltoDelete),
+          });
+        }
+      } catch (error) {
+        alert(
+          "There was an error deleting the label. Please try again after some time.",
+        );
+      }
+    }
+  };
+
   const showExpanded = selectedContact || isAddingContact;
 
   return (
@@ -219,17 +347,24 @@ function Home({ username, contactAvatarPreference }) {
                 ? sortedContacts
                 : activeContacts
           }
+          labels={labels}
           onAddContact={handleAddContact}
+          handleSortClick={handleSortClick}
           onContactSelect={handleSelectContact}
           handleNavigateHome={handleNavigateHome}
+          handleAddLabel={handleAddLabel}
+          handleEditLabel={handleEditLabel}
+          handleDeleteLabel={handleDeleteLabel}
           handleArchiveClick={handleArchiveClick}
           clearSelectedContact={setSelectedContact}
+          setSelectedLabel={setSelectedLabel}
         />
       </div>
       <div
         className={`w-full md:flex-1 ${showExpanded ? "block" : "hidden md:block"}`}
       >
         <ExpandedContactView
+          labels={labels}
           contactAvatarPreference={contactAvatarPreference}
           handleNavigateHome={handleNavigateHome}
           isAddingContact={isAddingContact}
