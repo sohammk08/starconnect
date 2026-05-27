@@ -62,7 +62,7 @@ function AddContact({ toggle }) {
       <button
         className="absolute top-4 right-4 text-gray-300 hover:text-white"
         onClick={() => {
-          navigate("/starconnect");
+          navigate("/");
           toggle(false);
         }}
       >

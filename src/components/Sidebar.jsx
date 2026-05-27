@@ -344,6 +344,7 @@ function Sidebar({
 
         {location.pathname.includes("/archive") ? (
           <ArchiveContactList
+            goHome={handleNavigateHome}
             contacts={contacts.filter((c) => c.contactStatus === "archived")}
             onContactSelect={onContactSelect}
           />

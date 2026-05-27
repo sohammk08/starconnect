@@ -49,8 +49,8 @@ function ExpandedContactView({
   );
 
   const ROUTES = {
-    home: "/starconnect",
-    archive: "/starconnect/archive",
+    home: "/",
+    archive: "/archive",
   };
 
   /* ---- Module helpers ---- */
@@ -469,8 +469,8 @@ function ExpandedContactView({
         ) : (
           /* Resting page */
           <div className="text-center">
-            <h1 className="text-4xl font-semibold text-gray-100 mb-8">
-              Connections, secured
+            <h1 className="text-4xl font-semibold text-gray-100 mb-8 max-w-xl">
+              Contacts, Elevated
             </h1>
             <ul className="space-y-4 text-lg text-blue-400">
               <li>

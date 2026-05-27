@@ -182,6 +182,15 @@ function Home({ username, contactAvatarPreference }) {
         ).toLowerCase()
       : selectedContact.firstName.toLowerCase();
 
+    // If active or starred
+    if (
+      selectedContact.contactStatus === "active" ||
+      selectedContact.contactStatus === "starred"
+    ) {
+      navigate(`/contact/${contactName}`);
+      return;
+    }
+
     // If archived, keep old archival path
     if (selectedContact.contactStatus === "archived") {
       navigate(`/archive/${contactName}`);

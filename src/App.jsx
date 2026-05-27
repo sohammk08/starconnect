@@ -21,7 +21,6 @@ import {
   BrowserRouter as Router,
   Route,
   Routes,
-  useParams,
 } from "react-router-dom";
 
 // Helper to avoid repetition in Home routes
@@ -35,35 +34,7 @@ const HomeOr = ({ userState, username, fallback, contactAvatarPreference }) =>
     fallback
   );
 
-const ValidatedContact = ({
-  userState,
-  username,
-  contactAvatarPreference,
-  labels,
-  userDocID,
-  fallback,
-}) => {
-  const { contact } = useParams();
-
-  if (!userState) return <ErrorPage />;
-
-  // Once user data is loaded, validate against actual contact labels
-  if (userDocID && Array.isArray(labels) && !labels.includes(contact)) {
-    return <ErrorPage />;
-  }
-
-  return (
-    <HomeOr
-      userState={userState}
-      username={username}
-      contactAvatarPreference={contactAvatarPreference}
-      fallback={fallback}
-    />
-  );
-};
-
 function App() {
-  const [labels, setLabels] = useState([]);
   const [username, setUsername] = useState("");
   const [userDocID, setUserDocID] = useState("");
   const { currentUser } = useContext(AuthContext);
@@ -87,7 +58,6 @@ function App() {
             setContactAvatarPreference(
               doc.data().contactAvatarPreference ?? "filled-color",
             );
-            setLabels(doc.data().contactLabels ?? []);
           });
         }
       } catch (error) {
@@ -147,14 +117,12 @@ function App() {
                 }
               />
               <Route
-                path="/:contact"
+                path="/contact/:contact"
                 element={
-                  <ValidatedContact
+                  <HomeOr
                     userState={!!currentUser}
                     username={username}
                     contactAvatarPreference={contactAvatarPreference}
-                    labels={labels}
-                    userDocID={userDocID}
                     fallback={<Register />}
                   />
                 }
